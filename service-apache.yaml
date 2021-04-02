@@ -4,7 +4,7 @@ metadata:
   name: apache-svc
 spec:
   selector:
-    role: app
+    role: app-apache
   ports:
     - protocol: TCP
       port: 80

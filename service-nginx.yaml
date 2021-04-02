@@ -4,7 +4,7 @@ metadata:
   name: nginx-svc
 spec:
   selector:
-    role: app
+    role: app-nginx
   ports:
     - protocol: TCP
       port: 80
