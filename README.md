@@ -19,3 +19,6 @@ kubectl get deployment -w
 
 ## Reaching servers
 Current configuration should route $(minikube ip) and apache.k8s to apache, and nginx.k8s.com to nginx (after setting values in `/etc/hosts`).
+
+## References
+* https://www.magalix.com/blog/implemeting-a-reverse-proxy-server-in-kubernetes-using-the-sidecar-pattern
