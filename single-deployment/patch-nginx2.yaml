@@ -1,0 +1,14 @@
+spec:
+  selector:
+    matchLabels:
+      role: mtd-app #app-nginx
+  template:
+    metadata:
+      labels:
+        role: mtd-app #app-nginx
+    spec:
+      containers:
+      - name: app-nginx
+        image: "magalixcorp/flasksidecar"
+      - name: web-nginx
+        image: "magalixcorp/nginxsidecar"
