@@ -4,26 +4,6 @@ metadata:
   name: app-ingress
 spec:
   rules:
-    # - host: nginx.k8s.com
-    #   http:
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix
-    #         backend:
-    #           service:
-    #             name: frontend-nginx
-    #             port:
-    #               number: 80
-    # - host: apache.k8s.com
-    #   http:
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix
-    #         backend:
-    #           service:
-    #             name: frontend-apache
-    #             port:
-    #               number: 80
     - http:
         paths:
           - path: /
