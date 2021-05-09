@@ -3,16 +3,20 @@ import time
 import sys
 from requests_html import HTMLSession
 
-url = "http://192.168.49.2/"
+url = "http://192.168.99.101"
+port = "30003"
 session = HTMLSession()
 
+def get_url():
+    return '{}:{}/'.format(url, port)
+
 def make_request():
-    r = requests.get(url)
+    r = requests.get(get_url())
     server = r.headers['Server']
     print(server)
 
 def make_request_with_js():
-    r = session.get(url)
+    r = session.get(get_url())
     r.html.render()
     server = r.headers['Server']
     print(server)
