@@ -1,0 +1,24 @@
+alertmanager:
+  enabled: false
+pushgateway:
+  enabled: false
+networkPolicy:
+  enabled: false
+nodeExporter:
+  enabled: false
+kubeStateMetrics:
+  enabled: false
+server:
+  retention: '1d'
+  global:
+    scrape_interval: 15s
+    scrape_timeout: 10s
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  service:
+    type: NodePort
