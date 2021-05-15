@@ -4,8 +4,7 @@ metadata:
   name: app-ingress
 spec:
   rules:
-    - host: apache.192.168.99.103.nip.io
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
@@ -14,14 +13,3 @@ spec:
                 name: wp-apache
                 port:
                   number: 8080
-    - host: nginx.192.168.99.103.nip.io
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: wordpress-nginx
-                port:
-                  number: 8080
-
