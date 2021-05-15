@@ -8,7 +8,7 @@ spec:
   ports:
     - protocol: "TCP"
       port: 8080
-      targetPort: 80
+      targetPort: 8080
   selector:
     app: wp-apache
     tier: frontend
@@ -27,6 +27,7 @@ spec:
       tier: frontend
   strategy:
     type: Recreate
+  replicas: 2
   template:
     metadata:
       labels:
@@ -34,22 +35,22 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: wordpress:5.7.2-php8.0-apache
+      - image: bitnami/wordpress:5.7.2
         name: wp-apache
         env:
-        - name: WORDPRESS_DB_NAME
+        - name: WORDPRESS_DATABASE_NAME
           value: wordpress
-        - name: WORDPRESS_DB_USER
+        - name: WORDPRESS_DATABASE_USER
           value: wordpress
-        - name: WORDPRESS_DB_HOST
+        - name: WORDPRESS_DATABASE_HOST
           value: wordpress-mysql
-        - name: WORDPRESS_DB_PASSWORD
+        - name: WORDPRESS_DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-pass
               key: password
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: wp-apache
         volumeMounts:
         - name: wordpress-persistent-storage

@@ -27,6 +27,7 @@ spec:
       tier: frontend
   strategy:
     type: Recreate
+  replicas: 2
   template:
     metadata:
       labels:
