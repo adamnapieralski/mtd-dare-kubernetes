@@ -1,9 +1,18 @@
 import requests
 import time
 import sys
+import subprocess
+
 from requests_html import HTMLSession
 
-url = "http://192.168.99.103/"
+def minikube_url():
+    process = subprocess.Popen('minikube ip', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, _ = process.communicate()
+    output = output.decode('utf-8').strip()
+    print("minikube ip:", output)
+    return output
+
+url = "http://{}/".format(minikube_url())
 session = HTMLSession()
 
 def make_request():
