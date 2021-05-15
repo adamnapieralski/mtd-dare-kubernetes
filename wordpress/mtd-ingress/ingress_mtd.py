@@ -29,10 +29,6 @@ def patch(svc_name):
     return run_command(cmd)
 
 def run_mtd(dt):
-    if not init():
-        print('Initial error')
-        return
-    time.sleep(20)
 
     patches = patches_generator()
 
