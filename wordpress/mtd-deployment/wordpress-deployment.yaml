@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: wordpress
   labels:
@@ -10,8 +10,10 @@ spec:
       app: wordpress
       tier: frontend
   replicas: 3
-  serviceName: wordpress
-  updateStrategy:
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
     type: RollingUpdate
   template:
     metadata:
@@ -37,6 +39,15 @@ spec:
         ports:
         - containerPort: 8080
           name: wordpress
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /
+            port: 8080
+          # https://loft.sh/blog/kubernetes-readiness-probes-examples-common-pitfalls/#probes-
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          timeoutSeconds: 2
         volumeMounts:
         - name: wordpress-persistent-storage
           mountPath: /var/www/html

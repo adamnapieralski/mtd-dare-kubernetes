@@ -23,7 +23,7 @@ def init():
     return run_command('./k8s_apply.sh')
 
 def patch(patch_image):
-    run_command('kubectl set image statefulset/{} {}={} --record'.format(deployment_name, container_name, patch_image))
+    run_command('kubectl set image deployment/{} {}={} --record'.format(deployment_name, container_name, patch_image))
 
 def run_mtd(dt):
     patches = patches_generator()
