@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: wordpress
   labels:
@@ -9,7 +9,10 @@ spec:
     matchLabels:
       app: wordpress
       tier: frontend
-  replicas: 1
+  replicas: 3
+  serviceName: wordpress
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
