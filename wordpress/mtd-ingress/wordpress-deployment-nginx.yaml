@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-nginx
+  labels:
+    app: wordpress-nginx
+spec:
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: wordpress-nginx
+    tier: frontend
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-nginx
+  labels:
+    app: wordpress-nginx
+spec:
+  selector:
+    matchLabels:
+      app: wordpress-nginx
+      tier: frontend
+  strategy:
+    type: Recreate
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: wordpress-nginx
+        tier: frontend
+    spec:
+      containers:
+      - image: bitnami/wordpress-nginx:5.7.2
+        name: wordpress-nginx
+        env:
+        - name: WORDPRESS_DATABASE_NAME
+          value: wordpress
+        - name: WORDPRESS_DATABASE_USER
+          value: wordpress
+        - name: WORDPRESS_DATABASE_HOST
+          value: wordpress-mysql
+        - name: WORDPRESS_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        ports:
+        - containerPort: 8080
+          name: wordpress-nginx
+        volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+      volumes:
+      - name: wordpress-persistent-storage
+        persistentVolumeClaim:
+          claimName: wp-pv-claim
