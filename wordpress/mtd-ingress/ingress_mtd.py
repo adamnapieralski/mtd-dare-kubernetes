@@ -6,7 +6,7 @@ ingress_file = 'ingress.yaml'
 ingress_name = 'app-ingress'
 
 def patches_generator():
-    svc_names = ['wp-apache', 'wordpress-nginx']
+    svc_names = ['wordpress-apache', 'wordpress-nginx']
     i = 0
     while True:
         i = (i + 1) % 2
