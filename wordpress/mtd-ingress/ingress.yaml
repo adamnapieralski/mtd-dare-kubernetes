@@ -10,6 +10,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: wp-apache
+                name: wordpress-apach
                 port:
                   number: 8080

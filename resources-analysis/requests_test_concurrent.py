@@ -130,4 +130,4 @@ if __name__ == "__main__":
     else:
         run_time = 120
 
-    run(TASKS_NUM, INTERVAL_MS, run_time, 'mtd-deployment.i15.with-req.mtd')
+    run(TASKS_NUM, INTERVAL_MS, run_time, 'mtd-ingress.i30.with-req.mtd')

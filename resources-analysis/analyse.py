@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
     data_series = get_data_series_new(filepath)
 
-    plot_series_new(data_series, 'MTD Deployment (interval 15s, with load requests)', filepath.replace('json', 'png'))
+    plot_series_new(data_series, 'MTD Ingress (interval 60s, with requests load)', filepath.replace('json', 'png'))
     # plot_series(data_series, 'nginx', 'info', filepath.replace('json', '{}.png'.format('nginx')))
 
 
