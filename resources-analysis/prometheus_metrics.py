@@ -9,7 +9,7 @@ INTERVAL = 5 # sec
 # NAME_SEARCH = ".*wordpress-nginx.*|.*wp-apache.*"
 NAME_SEARCH = ".*wordpress.*"
 
-prom = PrometheusConnect(url ="http://192.168.49.2:30281/", disable_ssl=True)
+prom = PrometheusConnect(url ="http://192.168.64.2:31384/", disable_ssl=True)
 
 def current_datetime_string():
     return datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
@@ -68,6 +68,6 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         run_time = int(sys.argv[1])
     else:
-        run_time = 120
+        run_time = 240
 
-    run(run_time)
+    run(run_time, 'test')

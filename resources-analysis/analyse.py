@@ -38,7 +38,7 @@ def get_data_series_new(filepath):
     pods = np.array([x[1] for x in group_series.index])
 
     data_series = {}
-    data_series['cpu'] = list(group_series['cpu'] * 100)
+    data_series['cpu'] = list(group_series['cpu'] * 100 / 4)
     data_series['memory'] = list(group_series['memory'])
 
     timestamps = [t[0] for t in group_series['cpu'].index]
@@ -66,16 +66,35 @@ def plot_series(data_series, server_name, title_info, filepath=''):
     if filepath != '':
         fig.savefig(filepath)
 
+
+def plot_series_new(data_series, title, filepath=''):
+    fig, ax = plt.subplots()
+    l1 = ax.plot(data_series['seconds'], data_series['cpu'], label='CPU', color='red')
+    ax.set_ylabel("CPU [%]", color='red')
+    ax.set_xlabel('Time [s]')
+    ax2 = ax.twinx()
+    l2 = ax2.plot(data_series['seconds'], data_series['memory'], label='memory', color='blue')
+    ax2.set_ylabel("Memory [Mb]", color="blue")
+
+
+    lns = l1+l2
+    labs = [l.get_label() for l in lns]
+    ax.legend(lns, labs, loc=0)
+
+    ax.set_title(title)
+    plt.show()
+    if filepath != '':
+        fig.savefig(filepath)
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         filepath = sys.argv[1]
     else:
         raise Exception("No source")
 
-    data_series = get_data_series(filepath)
+    data_series = get_data_series_new(filepath)
 
-    for server in servers:
-        plot_series(data_series, server['name'], 'info', filepath.replace('json', '{}.png'.format(server['name'])))
+    plot_series_new(data_series, 'MTD Deployment (interval 15s, with load requests)', filepath.replace('json', 'png'))
     # plot_series(data_series, 'nginx', 'info', filepath.replace('json', '{}.png'.format('nginx')))
 
 
