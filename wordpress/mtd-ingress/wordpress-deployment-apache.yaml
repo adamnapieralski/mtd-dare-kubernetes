@@ -43,7 +43,7 @@ spec:
         - name: WORDPRESS_DATABASE_USER
           value: wordpress
         - name: WORDPRESS_DATABASE_HOST
-          value: wordpress-mysql
+          value: wp-mysql
         - name: WORDPRESS_DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
