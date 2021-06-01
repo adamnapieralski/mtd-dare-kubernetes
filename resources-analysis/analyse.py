@@ -86,16 +86,71 @@ def plot_series_new(data_series, title, filepath=''):
     if filepath != '':
         fig.savefig(filepath)
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        filepath = sys.argv[1]
+def plot_multiple_series(files, title, resource_type='cpu', type='plain'):
+    data_series = [get_data_series_new(f) for f in files]
+
+    fig, ax = plt.subplots()
+    # secs = data_series[0]['seconds']
+    for i, d in enumerate(data_series):
+        reres = re.match(r'.*\.(i\d\d)\..*', files[i])
+        interval = reres.group(1)
+        if 'deployment' in files[i]:
+            label = 'Depl.-{}'.format(interval)
+        else:
+            label = 'Ingr.-{}'.format(interval)
+
+
+        ax.plot(d['seconds'], d[resource_type], label=label)
+
+    if type == 'plain':
+        plt.axvline(x=1*60, c='grey')
+        plt.axvline(x=8*60, c='grey')
     else:
-        raise Exception("No source")
+        plt.axvline(x=7.5*60, c='grey')
 
-    data_series = get_data_series_new(filepath)
+    ax.legend(loc='best')
 
-    plot_series_new(data_series, 'MTD Ingress (interval 60s, with requests load)', filepath.replace('json', 'png'))
+    ax.set_ylabel('CPU [%]' if resource_type == 'cpu' else 'Memory [MB]')
+    ax.set_xlabel('Time [s]')
+    ax.set_title(title)
+
+    # plt.show()
+    plt.savefig('results/{}_{}.png'.format(resource_type, type))
+
+if __name__ == "__main__":
+    # if len(sys.argv) > 1:
+    #     filepath = sys.argv[1]
+    # else:
+    #     raise Exception("No source")
+
+    # data_series = get_data_series_new(filepath)
+
+    # plot_series_new(data_series, 'MTD Ingress (interval 60s, with requests load)', filepath.replace('json', 'png'))
     # plot_series(data_series, 'nginx', 'info', filepath.replace('json', '{}.png'.format('nginx')))
+
+    files_no_req = [
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i15.no-req.0-mtd-0.2021.05.26.15.07.23.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i30.no-req.0-mtd-0.2021.05.26.14.00.46.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i60.no-req.0-mtd-0.2021.05.26.14.23.00.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i15.no-req.0-mtd-0.2021.05.31.21.29.57.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i30.no-req.0-mtd-0.2021.05.31.21.14.08.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i60.no-req.0-mtd-0.2021.05.31.20.57.29.json',
+    ]
+
+    files_with_req = [
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i15.with-req.mtd.2021.05.26.18.06.59.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i30.with-req.mtd.2021.05.26.16.19.17.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i60.with-req.mtd.2021.05.26.15.42.17.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i15.with-req.mtd.2021.05.31.22.35.19.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i30.with-req.mtd.2021.05.31.22.08.24.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i60.with-req.mtd.2021.05.31.21.50.32.json'
+    ]
+    # plot_multiple_series(files_no_req, '', resource_type='memory')
+    plot_multiple_series(files_with_req, 'CPU usage for MTDs with load tests', resource_type='cpu', type='load')
+    plot_multiple_series(files_with_req, 'Memory usage for MTDs with load tests', resource_type='memory', type='load')
+
+    plot_multiple_series(files_no_req, 'CPU usage for plain MTDs', resource_type='cpu', type='plain')
+    plot_multiple_series(files_no_req, 'Memory usage for plain MTDs', resource_type='memory', type='plain')
 
 
 
