@@ -119,13 +119,13 @@ def plot_multiple_series(files, title, resource_type='cpu', type='plain'):
 
 if __name__ == "__main__":
     # if len(sys.argv) > 1:
-    #     filepath = sys.argv[1]
+    #      filepath = sys.argv[1]
     # else:
     #     raise Exception("No source")
 
     # data_series = get_data_series_new(filepath)
 
-    # plot_series_new(data_series, 'MTD Ingress (interval 60s, with requests load)', filepath.replace('json', 'png'))
+    # plot_series_new(data_series, 'MTD Deployment (interval 15s, with requests load)', filepath.replace('json', 'png'))
     # plot_series(data_series, 'nginx', 'info', filepath.replace('json', '{}.png'.format('nginx')))
 
     files_no_req = [
@@ -138,7 +138,7 @@ if __name__ == "__main__":
     ]
 
     files_with_req = [
-        'results/mtd-deployment/resource-metrics.mtd-deployment.i15.with-req.mtd.2021.05.26.18.06.59.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i15.with-req.mtd.2021.06.02.20.28.02.json',
         'results/mtd-deployment/resource-metrics.mtd-deployment.i30.with-req.mtd.2021.05.26.16.19.17.json',
         'results/mtd-deployment/resource-metrics.mtd-deployment.i60.with-req.mtd.2021.05.26.15.42.17.json',
         'results/mtd-ingress/resource-metrics.mtd-ingress.i15.with-req.mtd.2021.05.31.22.35.19.json',
