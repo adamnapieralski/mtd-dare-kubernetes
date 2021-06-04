@@ -1,49 +1,49 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wp-apache
+  name: wordpress-apach
   labels:
-    app: wp-apache
+    app: wordpress-apach
 spec:
   ports:
     - protocol: "TCP"
       port: 8080
       targetPort: 8080
   selector:
-    app: wp-apache
+    app: wordpress-apach
     tier: frontend
   type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wp-apache
+  name: wordpress-apach
   labels:
-    app: wp-apache
+    app: wordpress-apach
 spec:
   selector:
     matchLabels:
-      app: wp-apache
+      app: wordpress-apach
       tier: frontend
   strategy:
     type: Recreate
-  replicas: 2
+  replicas: 3
   template:
     metadata:
       labels:
-        app: wp-apache
+        app: wordpress-apach
         tier: frontend
     spec:
       containers:
       - image: bitnami/wordpress:5.7.2
-        name: wp-apache
+        name: wordpress-apach
         env:
         - name: WORDPRESS_DATABASE_NAME
           value: wordpress
         - name: WORDPRESS_DATABASE_USER
           value: wordpress
         - name: WORDPRESS_DATABASE_HOST
-          value: wordpress-mysql
+          value: wp-mysql
         - name: WORDPRESS_DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -51,7 +51,7 @@ spec:
               key: password
         ports:
         - containerPort: 8080
-          name: wp-apache
+          name: wordpress-apach
         volumeMounts:
         - name: wordpress-persistent-storage
           mountPath: /var/www/html

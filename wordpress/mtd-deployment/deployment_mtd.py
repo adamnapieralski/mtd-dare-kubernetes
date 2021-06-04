@@ -25,20 +25,26 @@ def init():
 def patch(patch_image):
     run_command('kubectl set image deployment/{} {}={} --record'.format(deployment_name, container_name, patch_image))
 
-def run_mtd(dt):
+def run_mtd(dt, patches_num=100000000):
     patches = patches_generator()
+    patches_counter = 1
 
-    while True:
+    while patches_counter <= patches_num:
         patch(next(patches))
         time.sleep(dt)
+        patches_counter += 1
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         dt = int(sys.argv[1])
+        if len(sys.argv) > 2:
+            patches_num = int(sys.argv[2])
+        else:
+            patches_num = 100000000
     else:
         dt = 30
-
-    run_mtd(dt)
+        patches_num = 100000000
+    run_mtd(dt, patches_num=patches_num)
 
 
 

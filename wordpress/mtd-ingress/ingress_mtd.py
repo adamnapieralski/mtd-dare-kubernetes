@@ -6,7 +6,7 @@ ingress_file = 'ingress.yaml'
 ingress_name = 'app-ingress'
 
 def patches_generator():
-    svc_names = ['wp-apache', 'wordpress-nginx']
+    svc_names = ['wordpress-apach', 'wordpress-nginx']
     i = 0
     while True:
         i = (i + 1) % 2
@@ -28,21 +28,26 @@ def patch(svc_name):
     cmd += "}]'"
     return run_command(cmd)
 
-def run_mtd(dt):
-
+def run_mtd(dt, patches_num=100000000):
     patches = patches_generator()
+    patches_counter = 1
 
-    while True:
+    while patches_counter <= patches_num:
         patch(next(patches))
         time.sleep(dt)
+        patches_counter += 1
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         dt = int(sys.argv[1])
+        if len(sys.argv) > 2:
+            patches_num = int(sys.argv[2])
+        else:
+            patches_num = 100000000
     else:
         dt = 10
 
-    run_mtd(dt)
+    run_mtd(dt, patches_num)
 
 
 
