@@ -36,6 +36,7 @@ def plot_series(data_series, title, filepath=''):
     ax2 = ax.twinx()
     l2 = ax2.plot(data_series['seconds'], data_series['memory'], label='memory', color='blue')
     ax2.set_ylabel("Memory [Mb]", color="blue")
+    plt.axvline(x=7.5*60, c='grey')
 
 
     lns = l1+l2
@@ -79,14 +80,14 @@ def plot_multiple_series(files, title, resource_type='cpu', type='plain'):
     plt.savefig('results/{}_{}.png'.format(resource_type, type))
 
 if __name__ == "__main__":
-    # if len(sys.argv) > 1:
-    #      filepath = sys.argv[1]
-    # else:
-    #     raise Exception("No source")
+    if len(sys.argv) > 1:
+         filepath = sys.argv[1]
+    else:
+        raise Exception("No source")
 
-    # data_series = get_data_series(filepath)
+    data_series = get_data_series(filepath)
 
-    # plot_series(data_series, 'MTD Deployment (interval 15s, with requests load)', filepath.replace('json', 'png'))
+    plot_series(data_series, 'MTD Deployment (interval 120s, with requests load)', filepath.replace('json', 'png'))
     # plot_series(data_series, 'nginx', 'info', filepath.replace('json', '{}.png'.format('nginx')))
 
     files_no_req = [

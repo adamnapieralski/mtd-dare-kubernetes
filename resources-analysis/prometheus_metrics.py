@@ -9,7 +9,7 @@ INTERVAL = 5 # sec
 # NAME_SEARCH = ".*wordpress-nginx.*|.*wp-apache.*"
 NAME_SEARCH = ".*wordpress.*"
 
-prom = PrometheusConnect(url ="http://192.168.64.2:31384/", disable_ssl=True)
+prom = PrometheusConnect(url ="http://192.168.49.2:30943/", disable_ssl=True)
 
 def current_datetime_string():
     return datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
