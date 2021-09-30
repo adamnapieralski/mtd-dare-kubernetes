@@ -95,7 +95,7 @@ def print_dare_comparison_concurrent_means(files):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-         filepath = sys.argv[1]
+        filepath = sys.argv[1]
     else:
         raise Exception("No source")
 
@@ -105,28 +105,28 @@ if __name__ == "__main__":
     # plot_series(data_series, 'nginx', 'info', filepath.replace('json', '{}.png'.format('nginx')))
 
     files_no_req = [
-        'results/mtd-deployment/resource-metrics.mtd-deployment.i15.no-req.0-mtd-0.2021.05.26.15.07.23.json',
-        'results/mtd-deployment/resource-metrics.mtd-deployment.i30.no-req.0-mtd-0.2021.05.26.14.00.46.json',
-        'results/mtd-deployment/resource-metrics.mtd-deployment.i60.no-req.0-mtd-0.2021.05.26.14.23.00.json',
-        'results/mtd-ingress/resource-metrics.mtd-ingress.i15.no-req.0-mtd-0.2021.05.31.21.29.57.json',
-        'results/mtd-ingress/resource-metrics.mtd-ingress.i30.no-req.0-mtd-0.2021.05.31.21.14.08.json',
-        'results/mtd-ingress/resource-metrics.mtd-ingress.i60.no-req.0-mtd-0.2021.05.31.20.57.29.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i15.no-req.0-mtd-0.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i30.no-req.0-mtd-0.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i60.no-req.0-mtd-0.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i15.no-req.0-mtd-0.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i30.no-req.0-mtd-0.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i60.no-req.0-mtd-0.json',
     ]
 
     files_with_req = [
-        'results/mtd-deployment/resource-metrics.mtd-deployment.i15.with-req.mtd.2021.06.02.20.28.02.json',
-        'results/mtd-deployment/resource-metrics.mtd-deployment.i30.with-req.mtd.2021.05.26.16.19.17.json',
-        'results/mtd-deployment/resource-metrics.mtd-deployment.i60.with-req.mtd.2021.05.26.15.42.17.json',
-        'results/mtd-ingress/resource-metrics.mtd-ingress.i15.with-req.mtd.2021.05.31.22.35.19.json',
-        'results/mtd-ingress/resource-metrics.mtd-ingress.i30.with-req.mtd.2021.05.31.22.08.24.json',
-        'results/mtd-ingress/resource-metrics.mtd-ingress.i60.with-req.mtd.2021.05.31.21.50.32.json'
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i15.with-req.mtd.2.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i30.with-req.mtd.json',
+        'results/mtd-deployment/resource-metrics.mtd-deployment.i60.with-req.mtd.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i15.with-req.mtd.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i30.with-req.mtd.json',
+        'results/mtd-ingress/resource-metrics.mtd-ingress.i60.with-req.mtd.json'
     ]
-    # # plot_multiple_series(files_no_req, '', resource_type='memory')
-    # plot_multiple_series(files_with_req, 'CPU usage for MTDs with load tests', resource_type='cpu', type='load')
-    # plot_multiple_series(files_with_req, 'Memory usage for MTDs with load tests', resource_type='memory', type='load')
+    # plot_multiple_series(files_no_req, '', resource_type='memory')
+    plot_multiple_series(files_with_req, 'CPU usage for MTDs with load tests', resource_type='cpu', type='load')
+    plot_multiple_series(files_with_req, 'Memory usage for MTDs with load tests', resource_type='memory', type='load')
 
-    # plot_multiple_series(files_no_req, 'CPU usage for plain MTDs', resource_type='cpu', type='plain')
-    # plot_multiple_series(files_no_req, 'Memory usage for plain MTDs', resource_type='memory', type='plain')
+    plot_multiple_series(files_no_req, 'CPU usage for plain MTDs', resource_type='cpu', type='plain')
+    plot_multiple_series(files_no_req, 'Memory usage for plain MTDs', resource_type='memory', type='plain')
 
 
     dare_comparison_sequential_files = [
