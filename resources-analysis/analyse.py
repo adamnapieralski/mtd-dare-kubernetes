@@ -79,6 +79,20 @@ def plot_multiple_series(files, title, resource_type='cpu', type='plain'):
     # plt.show()
     plt.savefig('results/{}_{}.png'.format(resource_type, type))
 
+def print_dare_comparison_sequential_means(files):
+    for file in files:
+        data = np.loadtxt(file, delimiter=',')[:,1]
+        print('{}\tmean: {}ms'.format(file, round(np.mean(data)*1000, 3)))
+
+def print_dare_comparison_concurrent_means(files):
+    for file in files:
+        data = np.loadtxt(file, delimiter=',', dtype='object')
+        data = data[:, 1:3].astype('float')
+        resp_times = []
+        for i in range(5):
+            resp_times.append((data[data[:, 0] == i])[:,1])
+        print('{}\tmean: {}ms'.format(file, round(np.mean(resp_times)*1000, 3)))
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
          filepath = sys.argv[1]
@@ -107,9 +121,31 @@ if __name__ == "__main__":
         'results/mtd-ingress/resource-metrics.mtd-ingress.i30.with-req.mtd.2021.05.31.22.08.24.json',
         'results/mtd-ingress/resource-metrics.mtd-ingress.i60.with-req.mtd.2021.05.31.21.50.32.json'
     ]
-    # plot_multiple_series(files_no_req, '', resource_type='memory')
-    plot_multiple_series(files_with_req, 'CPU usage for MTDs with load tests', resource_type='cpu', type='load')
-    plot_multiple_series(files_with_req, 'Memory usage for MTDs with load tests', resource_type='memory', type='load')
+    # # plot_multiple_series(files_no_req, '', resource_type='memory')
+    # plot_multiple_series(files_with_req, 'CPU usage for MTDs with load tests', resource_type='cpu', type='load')
+    # plot_multiple_series(files_with_req, 'Memory usage for MTDs with load tests', resource_type='memory', type='load')
 
-    plot_multiple_series(files_no_req, 'CPU usage for plain MTDs', resource_type='cpu', type='plain')
-    plot_multiple_series(files_no_req, 'Memory usage for plain MTDs', resource_type='memory', type='plain')
+    # plot_multiple_series(files_no_req, 'CPU usage for plain MTDs', resource_type='cpu', type='plain')
+    # plot_multiple_series(files_no_req, 'Memory usage for plain MTDs', resource_type='memory', type='plain')
+
+
+    dare_comparison_sequential_files = [
+        'results/dare-comparison/requests.seq.mtd-deployment.i15.log',
+        'results/dare-comparison/requests.seq.mtd-deployment.i30.log',
+        'results/dare-comparison/requests.seq.mtd-deployment.i60.log',
+        'results/dare-comparison/requests.seq.mtd-ingress.i15.log',
+        'results/dare-comparison/requests.seq.mtd-ingress.i30.log',
+        'results/dare-comparison/requests.seq.mtd-ingress.i60.log'
+    ]
+
+    dare_comparison_concurrent_files = [
+        'results/dare-comparison/requests.concurrent.mtd-deployment.i15.log',
+        'results/dare-comparison/requests.concurrent.mtd-deployment.i30.log',
+        'results/dare-comparison/requests.concurrent.mtd-deployment.i60.log',
+        'results/dare-comparison/requests.concurrent.mtd-ingress.i15.log',
+        'results/dare-comparison/requests.concurrent.mtd-ingress.i30.log',
+        'results/dare-comparison/requests.concurrent.mtd-ingress.i60.log'
+    ]
+
+    print_dare_comparison_sequential_means(dare_comparison_sequential_files)
+    print_dare_comparison_concurrent_means(dare_comparison_concurrent_files)

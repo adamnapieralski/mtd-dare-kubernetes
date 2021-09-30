@@ -47,40 +47,72 @@ class LoggerThread(threading.Thread):
 
 
 class RequestsManager():
-    def __init__(self, tasks_num, url, interval_ms, results_queue):
+    def __init__(self, tasks_num, url, interval_ms, results_queue, request_plain=False, requests_num=-1):
         self.tasks_num = tasks_num
         self.url = url
         self.interval_ms = interval_ms
         self.results_queue = results_queue
         self.loop = None
+        self.request_plain = request_plain
+        self.requests_num = requests_num
 
     async def make_request(self, id, asession, url):
-            timestamp = datetime.now().isoformat()
-            r = await asession.get(url)
-            start = time.time()
-            await r.html.arender()
-            render_time = time.time() - start
+        timestamp = datetime.now().isoformat()
+        r = await asession.get(url)
+        start = time.time()
+        await r.html.arender()
+        render_time = time.time() - start
 
-            status_code = r.status_code
-            server = None
-            if "Server" in r.headers:
-                server = r.headers['Server']
-            request_time = r.elapsed.total_seconds()
-            total_time = request_time + render_time
+        status_code = r.status_code
+        server = None
+        if "Server" in r.headers:
+            server = r.headers['Server']
+        request_time = r.elapsed.total_seconds()
+        total_time = request_time + render_time
 
-            return [timestamp, id, total_time, request_time, render_time, status_code, server]
+        return [timestamp, id, total_time, request_time, render_time, status_code, server]
+
+    async def make_request_plain(self, id, asession, url):
+        timestamp = datetime.now().isoformat()
+        r = await asession.get(url)
+        # r = requests.get(url)
+        status_code = r.status_code
+
+        server = None
+        if "Server" in r.headers:
+            server = r.headers['Server']
+        request_time = r.elapsed.total_seconds()
+        return [timestamp, id, request_time, status_code, server]
 
     async def make_request_task(self, id):
         asession = AsyncHTMLSession()
         while True:
-            res = await self.make_request(id, asession, self.url)
+            if self.request_plain:
+                res = await self.make_request_plain(id, asession, self.url)
+            else:
+                res = await self.make_request(id, asession, self.url)
             self.results_queue.put(res)
-            await asyncio.sleep(self.interval_ms / 1000.)
+            if self.interval_ms != 0:
+                await asyncio.sleep(self.interval_ms / 1000.)
+
+    async def make_request_num_task(self, id):
+        asession = AsyncHTMLSession()
+        for i in range(self.requests_num):
+            if self.request_plain:
+                res = await self.make_request_plain(id, asession, self.url)
+            else:
+                res = await self.make_request(id, asession, self.url)
+            self.results_queue.put(res)
+            if self.interval_ms != 0:
+                await asyncio.sleep(self.interval_ms / 1000.)
 
     async def make_all_request_tasks(self):
         tasks = []
         for i in range(self.tasks_num):
-            tasks.append(asyncio.ensure_future(self.make_request_task(i)))
+            if self.requests_num > 0:
+                tasks.append(asyncio.ensure_future(self.make_request_num_task(i)))
+            else:
+                tasks.append(asyncio.ensure_future(self.make_request_task(i)))
 
         await asyncio.gather(*tasks)
 
@@ -106,7 +138,7 @@ def stop_rm_after_time(rm, run_time):
         elapsed = (datetime.now() - start_time).total_seconds()
     rm.stop()
 
-def run(tasks_num, interval_ms, run_time, filename_info):
+def run(tasks_num, interval_ms, run_time, filename_info, requests_num=-1):
     results_queue = queue.Queue()
     log_file_path = "requests.{}.{}.log".format(filename_info, current_datetime_string())
 
@@ -114,10 +146,11 @@ def run(tasks_num, interval_ms, run_time, filename_info):
     lt.setDaemon(True)
     lt.start()
 
-    rm = RequestsManager(tasks_num, URL, interval_ms, results_queue)
+    rm = RequestsManager(tasks_num, URL, interval_ms, results_queue, request_plain=True, requests_num=requests_num)
 
-    thread = threading.Thread(target=stop_rm_after_time, args=(rm, run_time))
-    thread.start()
+    if requests_num <= 0:
+        thread = threading.Thread(target=stop_rm_after_time, args=(rm, run_time))
+        thread.start()
 
     rm.run()
 
@@ -130,4 +163,5 @@ if __name__ == "__main__":
     else:
         run_time = 120
 
-    run(TASKS_NUM, INTERVAL_MS, run_time, 'mtd-ingress.i30.with-req.mtd')
+    # run(TASKS_NUM, INTERVAL_MS, run_time, 'test.mtd-ingress.i30.with-req.mtd', )
+    run(5, 0, 0, 'concurrent.mtd-ingress.i15.3', requests_num=1000)
